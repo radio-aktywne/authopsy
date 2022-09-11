@@ -1,0 +1,7 @@
+**
+!authopsy/
+authopsy/.next/
+authopsy/docs/
+authopsy/node_modules/
+authopsy/README.md
+authopsy/tsconfig.tsbuildinfo
