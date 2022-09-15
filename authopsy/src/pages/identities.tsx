@@ -1,19 +1,23 @@
-import CenterLink from "../components/CenterLink";
 import Layout from "../components/Layout";
 import Panel from "../components/Panel";
-import Link from "../components/Link";
 import { useEffect, useState } from "react";
 import { Identity } from "@ory/client";
 import { useRouter } from "next/router";
 import { adminApi } from "../lib/ory";
 import axios from "axios";
-import { toast } from "react-toastify";
-import CodeBox from "../components/CodeBox";
+import Head from "next/head";
+import GoBack from "../components/GoBack";
+import Json from "../components/Json";
+import { useLabels } from "../contexts/labels";
+import { useToasts } from "../contexts/toasts";
+import { Box } from "@mantine/core";
 
 export default function Identities() {
   const [identities, setIdentities] = useState<Array<Identity>>();
 
   const router = useRouter();
+  const labels = useLabels();
+  const toasts = useToasts();
 
   useEffect(() => {
     async function fetchIdentities() {
@@ -24,28 +28,31 @@ export default function Identities() {
         const message = axios.isAxiosError(err)
           ? err.response?.data?.error?.reason
           : err.message;
-        toast.error(message);
+        toasts.error(message);
         await router.push("/");
       }
     }
 
     fetchIdentities().then();
-  }, [router]);
+  }, [router, toasts.error]);
 
   if (!identities) return null;
 
   return (
-    <Layout title="identities · authopsy">
-      {identities.map((identity) => (
-        <Panel key={identity.id}>
-          <CodeBox code={JSON.stringify(identity, null, 2)} />
+    <Box>
+      <Head>
+        <title>{labels.identities.title}</title>
+      </Head>
+      <Layout>
+        {identities.map((identity) => (
+          <Panel key={identity.id}>
+            <Json object={identity} />
+          </Panel>
+        ))}
+        <Panel>
+          <GoBack />
         </Panel>
-      ))}
-      <Panel>
-        <Link href="/" passHref>
-          <CenterLink>Go back</CenterLink>
-        </Link>
-      </Panel>
-    </Layout>
+      </Layout>
+    </Box>
   );
 }
