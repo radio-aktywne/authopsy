@@ -1,19 +1,23 @@
-import CenterLink from "../components/CenterLink";
 import Layout from "../components/Layout";
 import Panel from "../components/Panel";
-import Link from "../components/Link";
 import { useEffect, useState } from "react";
 import { IdentitySchemaContainer } from "@ory/client";
 import { useRouter } from "next/router";
 import { publicApi } from "../lib/ory";
 import axios from "axios";
-import { toast } from "react-toastify";
-import CodeBox from "../components/CodeBox";
+import Head from "next/head";
+import GoBack from "../components/GoBack";
+import Json from "../components/Json";
+import { useLabels } from "../contexts/labels";
+import { useToasts } from "../contexts/toasts";
+import { Box } from "@mantine/core";
 
 export default function Schemas() {
   const [schemas, setSchemas] = useState<Array<IdentitySchemaContainer>>();
 
   const router = useRouter();
+  const labels = useLabels();
+  const toasts = useToasts();
 
   useEffect(() => {
     async function fetchSchemas() {
@@ -25,28 +29,31 @@ export default function Schemas() {
           ? err.response?.data?.error?.reason
           : err.message;
         console.log(message);
-        toast.error(message);
+        toasts.error(message);
         await router.push("/");
       }
     }
 
     fetchSchemas().then();
-  }, [router]);
+  }, [router, toasts.error]);
 
   if (!schemas) return null;
 
   return (
-    <Layout title="schemas · authopsy">
-      {schemas.map((schema) => (
-        <Panel key={schema.id}>
-          <CodeBox code={JSON.stringify(schema, null, 2)} />
+    <Box>
+      <Head>
+        <title>{labels.schemas.title}</title>
+      </Head>
+      <Layout>
+        {schemas.map((schema) => (
+          <Panel key={schema.id}>
+            <Json object={schema} />
+          </Panel>
+        ))}
+        <Panel>
+          <GoBack />
         </Panel>
-      ))}
-      <Panel>
-        <Link href="/" passHref>
-          <CenterLink>Go back</CenterLink>
-        </Link>
-      </Panel>
-    </Layout>
+      </Layout>
+    </Box>
   );
 }

@@ -1,20 +1,23 @@
-import CenterLink from "../components/CenterLink";
 import Layout from "../components/Layout";
 import Panel from "../components/Panel";
-import Link from "../components/Link";
 import { useCallback, useState } from "react";
 import { SelfServiceRecoveryLink } from "@ory/client";
 import { adminApi } from "../lib/ory";
-import Button from "../components/Button";
-import CodeBox from "../components/CodeBox";
-import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import axios from "axios";
+import Head from "next/head";
+import { Box, Button } from "@mantine/core";
+import GoBack from "../components/GoBack";
+import Code from "../components/Code";
+import { useLabels } from "../contexts/labels";
+import { useToasts } from "../contexts/toasts";
 
 export default function Invite() {
   const [recoveryLink, setRecoveryLink] = useState<SelfServiceRecoveryLink>();
 
   const router = useRouter();
+  const labels = useLabels();
+  const toasts = useToasts();
 
   const onClick = useCallback(async () => {
     try {
@@ -30,28 +33,31 @@ export default function Invite() {
       const message = axios.isAxiosError(err)
         ? err.response?.data?.error?.reason
         : err.message;
-      toast.error(message);
+      toasts.error(message);
       await router.push("/");
     }
-  }, [router]);
+  }, [router, toasts.error]);
 
   return (
-    <Layout title="invite · authopsy">
-      <Panel>
-        <Button onClick={onClick} title={"Generate invite link"}>
-          Generate invite link
-        </Button>
-      </Panel>
-      {recoveryLink && (
+    <Box>
+      <Head>
+        <title>{labels.invite.title}</title>
+      </Head>
+      <Layout>
         <Panel>
-          <CodeBox code={recoveryLink.recovery_link} />
+          <Button onClick={onClick} title={labels.invite.buttons.generate}>
+            {labels.invite.buttons.generate}
+          </Button>
         </Panel>
-      )}
-      <Panel>
-        <Link href="/" passHref>
-          <CenterLink>Go back</CenterLink>
-        </Link>
-      </Panel>
-    </Layout>
+        {recoveryLink && (
+          <Panel>
+            <Code code={recoveryLink.recovery_link} />
+          </Panel>
+        )}
+        <Panel>
+          <GoBack />
+        </Panel>
+      </Layout>
+    </Box>
   );
 }
