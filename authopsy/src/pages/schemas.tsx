@@ -28,7 +28,6 @@ export default function Schemas() {
         const message = axios.isAxiosError(err)
           ? err.response?.data?.error?.reason
           : err.message;
-        console.log(message);
         toasts.error(message);
         await router.push("/");
       }
