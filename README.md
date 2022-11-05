@@ -4,8 +4,8 @@
 
 auth management 🪪
 
-[![Testing docker build](https://github.com/radio-aktywne/authopsy/actions/workflows/docker-build.yml/badge.svg)](https://github.com/radio-aktywne/authopsy/actions/workflows/docker-build.yml)
-[![Deploying docs](https://github.com/radio-aktywne/authopsy/actions/workflows/docs.yml/badge.svg)](https://github.com/radio-aktywne/authopsy/actions/workflows/docs.yml)
+[![Build](https://github.com/radio-aktywne/authopsy/actions/workflows/build.yaml/badge.svg)](https://github.com/radio-aktywne/authopsy/actions/workflows/build.yaaaaaml)
+[![Docs](https://github.com/radio-aktywne/authopsy/actions/workflows/docs.yaml/badge.svg)](https://github.com/radio-aktywne/authopsy/actions/workflows/docs.yaml)
 
 </div>
 
@@ -13,8 +13,9 @@ auth management 🪪
 
 This `README` provides info about the development process.
 
-For more info about `authopsy` itself see `authopsy/README.md`
-or [docs](https://radio-aktywne.github.io/authopsy).
+For more info about `authopsy` itself see
+[package `README`](authopsy/README.md) or
+[docs](https://radio-aktywne.github.io/authopsy).
 
 ## Quickstart
 
